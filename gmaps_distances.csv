@@ -1,4 +1,4 @@
-edge,from_place,to_place,google_maps_url,km
+edge,from_place,to_place,google_maps_url,km,
 v01->v4,"Gaumukh, Uttarakhand","Uttarkashi, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Gaumukh,+Uttarakhand&destination=Uttarkashi,+Uttarakhand&travelmode=driving",
 v02->v3,"Satopanth Lake, Uttarakhand","Joshimath, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Satopanth+Lake,+Uttarakhand&destination=Joshimath,+Uttarakhand&travelmode=driving",
 v4->v5,"Uttarkashi, Uttarakhand","New Tehri, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Uttarkashi,+Uttarakhand&destination=New+Tehri,+Uttarakhand&travelmode=driving",
