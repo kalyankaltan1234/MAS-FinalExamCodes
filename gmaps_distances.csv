@@ -1,0 +1,13 @@
+edge,from_place,to_place,google_maps_url,km,note
+v01->v4,"Gaumukh, Uttarakhand","Uttarkashi, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Gaumukh,+Uttarakhand&destination=Uttarkashi,+Uttarakhand&travelmode=driving",,first leg Gaumukh-Gangotri is a trek (about 18 km); Google Maps may need walking directions for that leg
+v02->v3,"Satopanth Lake, Uttarakhand","Joshimath, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Satopanth+Lake,+Uttarakhand&destination=Joshimath,+Uttarakhand&travelmode=driving",,Satopanth lake to Badrinath is a trek; Google Maps may need walking directions for that leg
+v4->v5,"Uttarkashi, Uttarakhand","New Tehri, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Uttarkashi,+Uttarakhand&destination=New+Tehri,+Uttarakhand&travelmode=driving",,
+v4->v2,"Uttarkashi, Uttarakhand","Rudraprayag, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Uttarkashi,+Uttarakhand&destination=Rudraprayag,+Uttarakhand&travelmode=driving",,ARTIFICIAL edge (exam): Google Maps road distance would only be a proxy for the delay
+v4->v1,"Uttarkashi, Uttarakhand","Devprayag, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Uttarkashi,+Uttarakhand&destination=Devprayag,+Uttarakhand&travelmode=driving",,
+v5->v3,"New Tehri, Uttarakhand","Joshimath, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=New+Tehri,+Uttarakhand&destination=Joshimath,+Uttarakhand&travelmode=driving",,ARTIFICIAL edge (exam): Google Maps road distance would only be a proxy for the delay
+v3->v2,"Joshimath, Uttarakhand","Rudraprayag, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Joshimath,+Uttarakhand&destination=Rudraprayag,+Uttarakhand&travelmode=driving",,
+v5->v1,"New Tehri, Uttarakhand","Devprayag, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=New+Tehri,+Uttarakhand&destination=Devprayag,+Uttarakhand&travelmode=driving",,
+v2->v1,"Rudraprayag, Uttarakhand","Devprayag, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Rudraprayag,+Uttarakhand&destination=Devprayag,+Uttarakhand&travelmode=driving",,
+v1->v6,"Devprayag, Uttarakhand","Rishikesh, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Devprayag,+Uttarakhand&destination=Rishikesh,+Uttarakhand&travelmode=driving",,
+v1->v7,"Devprayag, Uttarakhand","Haridwar, Uttarakhand","https://www.google.com/maps/dir/?api=1&origin=Devprayag,+Uttarakhand&destination=Haridwar,+Uttarakhand&travelmode=driving",,
+v1->v8,"Devprayag, Uttarakhand","Bijnor, Uttar Pradesh","https://www.google.com/maps/dir/?api=1&origin=Devprayag,+Uttarakhand&destination=Bijnor,+Uttar+Pradesh&travelmode=driving",,

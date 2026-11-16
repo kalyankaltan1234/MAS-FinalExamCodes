@@ -11,12 +11,30 @@ NAMES = {"v01": "Gomukh glacier", "v02": "Satopanth glacier", "v4": "Uttarkashi"
 LAB = {"v01": r"$v_{01}$", "v02": r"$v_{02}$", "v4": r"$v_4$", "v5": r"$v_5$", "v3": r"$v_3$", "v2": r"$v_2$",
        "v1": r"$v_1$", "v6": r"$v_6$", "v7": r"$v_7$", "v8": r"$v_8$"}
 
-DIST_CSV = os.environ.get("P3_DIST_CSV", os.path.join(HERE, "distances.csv"))
-EDGES = {}
-import csv
-with open(DIST_CSV, newline="") as fh:
-    for row in csv.DictReader(fh):
-        EDGES[tuple(row["edge"].strip().split("->"))] = (float(row["km"]), float(row["min_km"]), float(row["max_km"]), bool(int(row["artificial"])))
+EDGES = {("v01", "v4"): (118, 108.0, 123.0, False),
+         ("v02", "v3"): (58, 53.0, 71.0, False),
+         ("v4", "v5"): (116, 76.0, 119.0, False),
+         ("v4", "v2"): (176, 164.0, 178.0, True),
+         ("v4", "v1"): (160, 136.0, 173.0, False),
+         ("v5", "v3"): (254, 237.0, 271.0, True),
+         ("v3", "v2"): (113, 111.0, 122.0, False),
+         ("v5", "v1"): (74, 61.0, 79.0, False),
+         ("v2", "v1"): (67, 65.0, 70.0, False),
+         ("v1", "v6"): (73, 70.0, 75.0, False),
+         ("v1", "v7"): (96, 93.1, 99.0, False),
+         ("v1", "v8"): (175, 169.1, 181.0, False)}
+GMAPS_CSV = os.environ.get("P3_GMAPS_CSV", os.path.join(HERE, "gmaps_distances.csv"))
+GMAPS = {}; GMAPS_ROWS = []
+if os.path.exists(GMAPS_CSV):
+    import csv
+    with open(GMAPS_CSV, newline="") as fh:
+        for row in csv.DictReader(fh):
+            e = tuple(row["edge"].strip().split("->")); GMAPS_ROWS.append((e, row))
+            if row["km"].strip():
+                GMAPS[e] = float(row["km"])
+for e, km in GMAPS.items():
+    assert e in EDGES and km > 0, e
+    EDGES[e] = (km, km, km, EDGES[e][3])
 DIST = {e: v[0] for e, v in EDGES.items()}
 POP = {"v4": 0.25, "v5": 0.50, "v3": 0.75, "v2": 1.00, "v1": 0.80, "v6": 1.20, "v7": 2.00, "v8": 1.50}
 order = ["v01", "v02", "v4", "v5", "v3", "v2", "v1", "v6", "v7", "v8"]
@@ -445,10 +463,20 @@ def write_all(sims):
            ("v1", "v6"): r"\href{https://en.wikipedia.org/wiki/Devprayag}{Wikipedia} 74; \href{https://www.travanya.com/tourism/india/uttarakhand/temples/rishikesh/distance/from-devprayag/}{Travanya} 72.2; other pages 70, 75",
            ("v1", "v7"): r"\href{https://www.rome2rio.com/s/Devprayag/Haridwar}{Rome2rio} 93.1; \href{https://devdhamyatra.com/?p=4148}{Dev Dham Yatra} 98; other pages 95--99",
            ("v1", "v8"): r"\textbf{Derived}: Devprayag--Haridwar 96 + Haridwar--Bijnor 79 (\href{https://www.rome2rio.com/s/Haridwar/Bijnor}{Rome2rio} 76.9, \href{https://www.clearcarrental.com/haridwar-to-bijnor-distance}{Clear Car Rental} 76, \href{https://www.travanya.com/tourism/india/uttarakhand/temples/haridwar/distance/from-bijnor}{Travanya} 79, \href{https://cabbazar.com/taxi/cab/haridwar-to-bijnor}{Cabbazar} 81, Uber 82)"}
+    gm_url = {e: row["google_maps_url"] for e, row in GMAPS_ROWS}
     for (a, b), (d, lo, hi, art) in EDGES.items():
         spread = 100.0 * (hi - lo) / d
-        rows.append(r"%s$\to$%s %s & %g & %g--%g (%.0f\%%) & \scriptsize %s\\" % (LAB[a], LAB[b], "(artificial)" if art else "", d, lo, hi, spread, src[(a, b)]))
+        if (a, b) in GMAPS:
+            rows.append(r"%s$\to$%s %s & %g & -- & \scriptsize Google Maps (read by the student): \href{%s}{route}\\" % (LAB[a], LAB[b], "(artificial)" if art else "", d, gm_url[(a, b)]))
+        else:
+            rows.append(r"%s$\to$%s %s & %g & %g--%g (%.0f\%%) & \scriptsize %s\\" % (LAB[a], LAB[b], "(artificial)" if art else "", d, lo, hi, spread, src[(a, b)]))
     write_table("gen_p3_dist.tex", "@{}llcp{8.7cm}@{}", "edge & km used & source range (spread) & sources and leg values", rows)
+
+    glr = []
+    for e, row in GMAPS_ROWS:
+        a, b = e
+        glr.append(r"%s$\to$%s %s & %s to %s & \href{%s}{open route} & %s\\" % (LAB[a], LAB[b], "(artificial)" if EDGES[e][3] else "", row["from_place"].split(",")[0], row["to_place"].split(",")[0], row["google_maps_url"], ("%g" % GMAPS[e]) if e in GMAPS else "not read"))
+    write_table("gen_p3_gmaps.tex", "llll", r"edge & places & Google Maps directions link & km read from Google Maps", glr)
 
     t1 = []; raw = {}; mar = {}
     for n in CITIES:
@@ -513,6 +541,7 @@ def write_all(sims):
     mac("PthreeMaxSpread", "%.0f" % max(100 * (hi - lo) / d for (d, lo, hi, art) in EDGES.values() if not art))
     ms = max(((100 * (hi - lo) / d), e) for e, (d, lo, hi, art) in EDGES.items() if not art)[1]
     mac("PthreeMaxSpreadEdge", "$%s\\to %s$" % (LAB[ms[0]][1:-1], LAB[ms[1]][1:-1]))
+    mac("PthreeGmapsN", str(len(GMAPS)))
     mac("PthreeDepth", "6"); mac("PthreeNChecks", str(len(LOG)))
     mac("PthreeBalErr", "%.0e" % max(sims["_bal"], 1e-16))
     mac("PthreeTotalInj", "%.0f" % (60.0 * sum(float(np.sum(sims["C"]["Qc"][(n, "F")])) for n in SOURCES)))
